@@ -36,8 +36,15 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|min:3',
+            'description' => 'required',
+        ]);
+
+        $blog = Blog::create(['title' => $request->title,'description' => $request->description]);
+        return redirect('/blogs/'.$blog->id);
     }
+        
 
     /**
      * Display the specified resource.
@@ -47,7 +54,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        //
+        return view('show',compact('blog',$blog));
     }
 
     /**
@@ -58,7 +65,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        //
+        return view('edit',compact('blog',$blog));
     }
 
     /**
@@ -70,7 +77,16 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
-        //
+        $request->validate([
+            'title' => 'required|min:3',
+            'description' => 'required',
+        ]);
+
+        $blog->title = $request->title;
+        $blog->description = $request->description;
+        $blog->save();
+        $request->session()->flash('message', 'Successfully modified the task!');
+        return redirect('blogs');
     }
 
     /**
@@ -79,8 +95,10 @@ class BlogController extends Controller
      * @param  \App\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Blog $blog)
+    public function destroy(Request $request,Blog $blog)
     {
-        //
+        $blog->delete();
+        $request->session()->flash('message', 'Successfully deleted the task!');
+        return redirect('blogs');
     }
 }

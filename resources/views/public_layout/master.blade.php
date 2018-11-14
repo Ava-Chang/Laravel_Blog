@@ -17,7 +17,6 @@
 </section>
 	@yield('content')
 	@include('public_layout.footer')
-	@include('public_layout.footer-scripts')
 </body>
 	
 </html>
